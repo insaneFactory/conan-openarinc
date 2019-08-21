@@ -9,13 +9,23 @@ class OpenarincConan(ConanFile):
     description = "Library to parse A429"
     topics = ("arinc", "a429")
     settings = "os", "compiler", "build_type", "arch"
-    options = {"shared": [True, False]}
-    default_options = "shared=False"
+    options = {
+        "shared": [True, False],
+        "fPIC": [True, False]
+    }
+    default_options = {
+        "shared": False,
+        "fPIC": True
+    }
     generators = "cmake"
     exports_sources = "CMakeLists.txt"
     build_requires = (
         "cmake_installer/3.12.1@conan/stable"
     )
+
+    def configure(self):
+        if self.settings.os == "Windows":
+            del self.options.fPIC
 
     def source(self):
         self.run("git clone https://github.com/stewbond/openarinc.git")
@@ -23,21 +33,6 @@ class OpenarincConan(ConanFile):
 
     def build(self):
         cmake = CMake(self)
-        cmake.configure(source_folder="hello")
-        cmake.build()
-
-        # Explicit way:
-        # self.run('cmake %s/hello %s'
-        #          % (self.source_folder, cmake.command_line))
-        # self.run("cmake --build . %s" % cmake.build_config)
-
-    #def configure(self):
-    #    del self.settings.compiler.libcxx
-
-    def build(self):
-        cmake = CMake(self)
-        #cmake.definitions["CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS"] = True
-        #cmake.definitions["BuildShared"] = self.options.shared
         cmake.configure()
         cmake.build()
 
