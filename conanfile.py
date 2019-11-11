@@ -20,7 +20,7 @@ class OpenarincConan(ConanFile):
     generators = "cmake"
     exports_sources = "CMakeLists.txt"
     build_requires = (
-        "cmake_installer/3.12.1@conan/stable"
+        "cmake_installer/3.15.5@conan/stable"
     )
 
     def configure(self):
